@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * @author ${author}
  * @Description Created on ${date}
  */
-@Service
+
 <#if superEntityClass??>
 public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
 <#else>

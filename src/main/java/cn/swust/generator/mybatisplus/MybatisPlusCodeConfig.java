@@ -139,6 +139,8 @@ public class MybatisPlusCodeConfig {
         strategy.setEntityLombokModel(true);
         strategy.setInclude(tableName);
 
+        //设置为rest风格的controller
+        strategy.setRestControllerStyle(true);
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);

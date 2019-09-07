@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 <#else>
 @Controller
 </#if>
-@RequestMapping("${table.xmlName}")
 <#if kotlin>
 class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
 <#else>

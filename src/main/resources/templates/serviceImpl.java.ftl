@@ -19,6 +19,11 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
 <#else>
 public class ${table.serviceImplName} implements ${table.serviceName} {
 </#if>
+
+<#if superEntityClass??>
+<#else>
 @Autowired
 private ${table.mapperName} mapper;
+</#if>
+
 }

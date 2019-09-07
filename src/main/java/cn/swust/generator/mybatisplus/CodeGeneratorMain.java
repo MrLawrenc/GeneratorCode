@@ -12,12 +12,17 @@ public class CodeGeneratorMain {
         // SET GLOBAL time_zone='+8:00'
 
         List<String> tableNames = new ArrayList<>();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 6; i++) {
             tableNames.add("user");//表名
+            tableNames.add("role");//表名
+            tableNames.add("user_role");//表名
+            tableNames.add("permission");//表名
+            tableNames.add("role_per");//表名
+            tableNames.add("mydata");//表名
         }
 
         tableNames.forEach(tableName -> {
-            MybatisPlusCodeConfig.codeGenerator(tableName,"com.guotie");
+            MybatisPlusCodeConfig.codeGenerator(tableName,"com.example.study.dataFilter.test");
         });
     }
 }
