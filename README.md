@@ -23,4 +23,4 @@ dsc.setPassword("123456");
 
 如果需要自定义，可以自行修改在resources下的模板。可以在`MybatisPlusCodeConfig`类里面自定义是否需要继承mybatis-plus的父类service
 
-## 根据https://github.com/Tellsea/mybatis-plus-code项目修改
+## 根据https://github.com/Tellsea/mybatis-plus-code 项目修改
