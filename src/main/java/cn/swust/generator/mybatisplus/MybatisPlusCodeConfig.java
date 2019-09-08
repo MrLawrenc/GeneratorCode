@@ -1,6 +1,7 @@
 package cn.swust.generator.mybatisplus;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -19,20 +20,97 @@ import java.util.regex.Pattern;
  * Mybatis plus 官网：https://mp.baomidou.com/guide/generator.html
  */
 public class MybatisPlusCodeConfig {
+
+    String url;
+    String driverName;
+    String username;
+    String password;
     /**
      * 项目路径
      */
-    private static final String projectPath = System.getProperty("user.dir");
+    private String projectPath = System.getProperty("user.dir");
     /**
      * 模板存放位置
      */
-    private static final String templatePathEntity = "/templates/entity.java.ftl";
-    private static final String templatePathController = "/templates/controller.java.ftl";
-    private static final String templatePathService = "/templates/service.java.ftl";
-    private static final String templatePathServiceImpl = "/templates/serviceImpl.java.ftl";
-    private static final String templatePathMapper = "/templates/mapper.java.ftl";
-    private static final String templatePathMapperXML = "/templates/mapper.xml.ftl";
-    private static final String templatePathJsp = "/templates/view.jsp.ftl";
+    private String templatePathEntity = "/templates/entity.java.ftl";
+    private String templatePathController = "/templates/controller.java.ftl";
+    private String templatePathService = "/templates/service.java.ftl";
+    private String templatePathServiceImpl = "/templates/serviceImpl.java.ftl";
+    private String templatePathMapper = "/templates/mapper.java.ftl";
+    private String templatePathMapperXML = "/templates/mapper.xml.ftl";
+    private String templatePathJsp = "/templates/view.jsp.ftl";
+    //service是否需要继承关系
+    boolean serviceNeedExtend = false;
+    //service接口的父类为plus的service
+    boolean serviceParentIsPlus = false;
+    //service实现类的父类为plus的service
+    boolean serviceImplParentIsPlus = false;
+
+    //service接口的父类为plus的service
+    String serviceParentClz = "";
+    //service实现类的父类为plus的service
+    String serviceImplParentClz = "";
+
+
+    String entryParentClz = "";
+    String controllerParentClz = "";
+
+    /**
+     * @author : LiuMing
+     * @date : 2019/9/8 10:35
+     * @description :   设置生成service的父类为plus的service
+     */
+    public MybatisPlusCodeConfig setServiceParentPlus() {
+        this.serviceNeedExtend = true;
+        this.serviceParentIsPlus = true;
+        this.serviceImplParentIsPlus = true;
+        return this;
+    }
+
+    /**
+     * @author : LiuMing
+     * @date : 2019/9/8 10:35
+     * @description :   自定义生成的service接口的父类<code>serviceParentClz</code>为需要继承的类的全限定名
+     */
+    public MybatisPlusCodeConfig setServiceParentOther(String serviceParentClz) {
+        this.serviceNeedExtend = true;
+        this.serviceParentIsPlus = false;
+        this.serviceImplParentIsPlus = false;
+        this.serviceParentClz = serviceParentClz;
+        return this;
+    }
+
+    /**
+     * @author : LiuMing
+     * @date : 2019/9/8 10:36
+     * @description :   自定义生成的service实现类的父类
+     */
+    public MybatisPlusCodeConfig setServiceImplParentOther(String serviceImplParentClz) {
+        this.serviceNeedExtend = true;
+        this.serviceImplParentIsPlus = false;
+        this.serviceImplParentClz = serviceImplParentClz;
+        return this;
+    }
+
+    //entry父类设置
+    public MybatisPlusCodeConfig setEntryParent(String entryParentClz) {
+        this.entryParentClz = entryParentClz;
+        return this;
+    }
+
+    //controller父类设置
+    public MybatisPlusCodeConfig setControllerParent(String controllerParentClz) {
+        this.controllerParentClz = controllerParentClz;
+        return this;
+    }
+
+    //构造方法
+    public MybatisPlusCodeConfig(String url, String driverName, String username, String password) {
+        this.url = url;
+        this.driverName = driverName;
+        this.username = username;
+        this.password = password;
+    }
 
 
     /**
@@ -41,7 +119,7 @@ public class MybatisPlusCodeConfig {
      * @param tableName   表名
      * @param packageName 基础包名
      */
-    public static void codeGenerator(String tableName, String packageName) {
+    public void codeGenerator(String tableName, String packageName) {
         /**
          * 生成文件位置
          */
@@ -73,28 +151,41 @@ public class MybatisPlusCodeConfig {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC");
-        dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("admin");
+        dsc.setUrl(url);
+        dsc.setDriverName(driverName);
+        dsc.setUsername(username);
+        dsc.setPassword(password);
         mpg.setDataSource(dsc);
 
         // 基础包配置
-        final PackageConfig pc = new PackageConfig();
+        PackageConfig pc = new PackageConfig();
 /*        pc.setModuleName("test");
         pc.setParent("com.guotie");*/
         pc.setParent(packageName);
         mpg.setPackageInfo(pc);
 
-        //重点: 自定义配置,向模板注入自定义的属性。还有问题，模板引擎会报错
+        //重点: 自定义配置,向模板注入自定义的属性。
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
-               /* Map<String, Object> map = new HashMap<>();
-                //设置生成的service需要继承苞米豆的ServiceImpl(这个属性会在模板里面进行判断，如为true，则会继承苞米豆的service)
-                Map map1 = setServiceParent(map);
+                Map<String, Object> map = new HashMap<>();
+                if (serviceNeedExtend) {
+                    //设置service需要继承，这个属性会在freemarker里面取出来作为是否继承的依据,value值随便写，只要不为null即可
+                    map.put("serviceNeedExtends", "aa");
+                    if (!serviceImplParentIsPlus) {//父类不为plus的service实现类需要生成自动注入mapper的代码
+                        map.put("needAutowiredMapper", "bb");
+                    }
 
-                this.setMap(map1);*/
+                    if (serviceParentIsPlus) {
+                        map.put("serviceParentIsPlus", "cc");
+                    }
+                    if (serviceImplParentIsPlus) {
+                        map.put("serviceImplParentIsPlus", "dd");
+                    }
+                } else {
+                    map.put("serviceNeedExtends", null);
+                }
+                this.setMap(map);
             }
         };
 
@@ -111,31 +202,39 @@ public class MybatisPlusCodeConfig {
         StrategyConfig strategy = new StrategyConfig();
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        /*自己可选父类,如果需要继承父类可以在下面的几个方法中设置。参数为父类的完整包名+类名
-         *
-         *注意:如果不设置父类，那么mybatis-plus会自动继承苞米豆的父类，如：接口service，sevice实现以及mapper都会继承苞米豆自带的父类，
-         * 此时如果不需要继承父类是无法避免的，那么就需要在模板引擎加一个判断，判断是否需要继承。
-         *
-         * <p>本来是通过设置自定义属性来判断是否需要继承的，但是模板引擎去取自定义属性会报错，因此判断的条件只能**借助是否设置了实体类的父类。**
-         * 在模板引擎判断是否有实体的父类设置:
-         *  <#if superEntityClass??>
-         *  public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
-         *  <#else>
-         *  public interface ${table.serviceName} {
-         *  </#if>
-         *  }
-         *  因此打开下面代码会有继承，不打开是没有继承的(里面的全类名可以随便写)。
-         *  具体需不需要继承关系，也可以直接更改模板引擎的条件判断，删除也行，
-         * */
-        //打开生成service会继承苞米豆的service
-        strategy.setSuperEntityClass("java.lang.Object");
 
-
-/*        strategy.setSuperEntityClass(basePackage + ".entity.BaseEntity");
+        try {
+            if (StringUtils.isNotEmpty(controllerParentClz)) {
+                strategy.setSuperControllerClass(controllerParentClz);
+            }
+            if (StringUtils.isNotEmpty(entryParentClz)) {
+                strategy.setSuperControllerClass(entryParentClz);
+            }
+        } catch (Exception e) {
+            System.err.println("entry or controller采用自定义的父类失败,将不会设置继承关系!");
+        }
+        /* strategy.setSuperEntityClass(basePackage + ".entity.BaseEntity");
         strategy.setSuperControllerClass(basePackage + ".controller.BaseController");
         strategy.setSuperControllerClass("cn.tellsea.skeleton.lmy.base.controller.BaseController");
         strategy.setSuperServiceClass(basePackage + ".service.BaseService");
         strategy.setSuperServiceImplClass(basePackage + ".service.impl.ServiceImpl");*/
+        //根据配置确定是否需要service的继承关系，如果还需要entry和controller的继承关系，可以依照上面注释的代码自行配置
+        if (serviceNeedExtend && !serviceParentIsPlus && StringUtils.isNotEmpty(serviceParentClz)) {
+            try {
+                strategy.setSuperServiceClass(serviceParentClz);
+            } catch (Exception e) {
+                System.err.println("接口service采用自定义的父类失败,将转换为继承mybatis-plus的service接口!\t父类全限定名为:" + serviceParentClz);
+            }
+        }
+
+        if (serviceNeedExtend && !serviceImplParentIsPlus && StringUtils.isNotEmpty(serviceImplParentClz)) {
+            try {
+                strategy.setSuperServiceImplClass(serviceImplParentClz);
+            } catch (Exception e) {
+                System.err.println("实现类service采用自定义的父类失败,将转换为继承mybatis-plus的service实现类!\t父类全限定名为:" + serviceImplParentClz);
+            }
+        }
+
         strategy.setEntityLombokModel(true);
         strategy.setInclude(tableName);
 
@@ -144,7 +243,8 @@ public class MybatisPlusCodeConfig {
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(pc.getModuleName() + "_");
         mpg.setStrategy(strategy);
-        mpg.setTemplateEngine(new FreemarkerTemplateEngine());
+        FreemarkerTemplateEngine freemarker = new FreemarkerTemplateEngine();
+        mpg.setTemplateEngine(freemarker);
         mpg.execute();
     }
 
@@ -153,7 +253,7 @@ public class MybatisPlusCodeConfig {
      *
      * @return
      */
-    private static List<FileOutConfig> getFileOutConfig(String javaLocation, String xmlLocation, String pageLocation) {
+    private List<FileOutConfig> getFileOutConfig(String javaLocation, String xmlLocation, String pageLocation) {
         List<FileOutConfig> focList = new ArrayList<>();
 
         // Entity
@@ -222,13 +322,13 @@ public class MybatisPlusCodeConfig {
      * @param oldStr
      * @return
      */
-    public static String convertToLowercase(String oldStr) {
+    public String convertToLowercase(String oldStr) {
         char[] chars = oldStr.toCharArray();
         chars[0] += 32;
         return String.valueOf(chars);
     }
 
-    private static Pattern pattern = Pattern.compile("[A-Z]");
+    private Pattern pattern = Pattern.compile("[A-Z]");
 
     /**
      * 驼峰转下划线
@@ -236,7 +336,7 @@ public class MybatisPlusCodeConfig {
      * @param str
      * @return
      */
-    public static StringBuffer humpTurnUnderscore(StringBuffer str) {
+    public StringBuffer humpTurnUnderscore(StringBuffer str) {
         Matcher matcher = pattern.matcher(str);
         StringBuffer sb = new StringBuffer(str);
         if (matcher.find()) {
@@ -252,35 +352,4 @@ public class MybatisPlusCodeConfig {
         return humpTurnUnderscore(sb);
     }
 
-
-    /*    *//**有问题自定义属性
-     * @author : LiuMing
-     * @date : 2019/9/6 22:56
-     * @description :  自定义属性注入
-     * <p>
-     * 通过如下方式获取:
-     * entity2.java.ftl
-     * 自定义属性注入abc=${cfg.abc}
-     * <p>
-     * entity2.java.vm
-     * 自定义属性注入abc=$!{cfg.abc}
-     * <p>
-     * <p>
-     * need代表需要注入的键值对
-     *//*
-    public static Map<String, Object> setValue(Map<String, Object> map, Map<String, Object> need) {
-        map.putAll(need);
-        return map;
-    }
-
-    *//**
-     * @author : LiuMing
-     * @date : 2019/9/6 23:33
-     * @description :   设置是否需要继承苞米豆定义的父类service
-     *//*
-    public static Map setServiceParent(Map<String,Object> map) {
-        map.put("needParentService", "hello");
-        return map;
-
-    }*/
 }

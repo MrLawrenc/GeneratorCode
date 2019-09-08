@@ -20,8 +20,11 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+<#if superEntityClass??>
+public class  ${entity}  extends ${superEntityClass} {
+<#else>
 public class  ${entity} {
-
+</#if>
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
