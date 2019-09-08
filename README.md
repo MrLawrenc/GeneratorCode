@@ -9,18 +9,53 @@
 
 ## 使用方法
 
+找到CodeGeneratorMain类，查看使用示例。
 
-修改数据源配置，根据自己的实际地址修改,配置类位置为：`MybatisPlusCodeConfig`
-
+#### step1
 ```java
-dsc.setUrl("jdbc:mysql://localhost:3306/数据库名?characterEncoding=utf8");
-dsc.setDriverName("com.mysql.jdbc.Driver");
-dsc.setUsername("root");
-dsc.setPassword("123456");
+//=================================step1:传入数据库连接信息构造对象===============================================
+//构造器参数分别为url driver username password
+MybatisPlusCodeConfig codeConfig = new MybatisPlusCodeConfig("jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC",
+        "com.mysql.jdbc.Driver", "root", "admin");
 ```
+#### step2
+```java
+ //=================================step2:如果不需要继承关系可以跳过整个step2===============================================
+/*step2.1:如果service需要继承，那么下面两个设置2选1即可。如果不需要继承关系，可以不设置，两个都注销即可*/
 
-接下来，找到CodeGeneratorMain类，更改使用的表名，使用Java的方式运行即可。启动类路径：`MybatisPlusCode`
+//设置为继承mybatis-plus的service
+codeConfig.setServiceParentPlus();
+
+/*//设置service继承其他类
+codeConfig.setServiceParentOther("cn.swust.generator.base.service.BaseService");
+codeConfig.setServiceImplParentOther("cn.swust.generator.base.service.impl.BaseServiceImpl");*/
+
+/*step2.2:如果entry和controller需要继承，不需要继承可以不设置*/
+/*  codeConfig.setEntryParent("");
+codeConfig.setControllerParent("");*/
+```
+#### step3
+```java
+//=================================step3:设置需要的表list===============================================
+List<String> tableNames = new ArrayList<>();
+for (int i = 0; i < 6; i++) {
+    tableNames.add("user");//表名
+    tableNames.add("role");//表名
+    tableNames.add("user_role");//表名
+    tableNames.add("permission");//表名
+    tableNames.add("role_per");//表名
+    tableNames.add("mydata");//表名
+}
+```
+#### step4
+```java
+//=================================step4:执行===============================================
+tableNames.forEach(tableName -> {
+    codeConfig.codeGenerator(tableName, "com.example.study.dataFilter.test");
+});
+```
 
 如果需要自定义，可以自行修改在resources下的模板。可以在`MybatisPlusCodeConfig`类里面自定义是否需要继承mybatis-plus的父类service
 
-## 根据https://github.com/Tellsea/mybatis-plus-code项目修改
+## 注:
+参考https://github.com/Tellsea/mybatis-plus-code更改

@@ -23,7 +23,7 @@ public class CodeGeneratorMain {
         //设置为继承mybatis-plus的service
         codeConfig.setServiceParentPlus();
 
-        /*//设置service继承其他类，如Object
+        /*//设置service继承其他类
         codeConfig.setServiceParentOther("cn.swust.generator.base.service.BaseService");
         codeConfig.setServiceImplParentOther("cn.swust.generator.base.service.impl.BaseServiceImpl");*/
 
