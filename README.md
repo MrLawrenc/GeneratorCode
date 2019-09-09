@@ -36,6 +36,17 @@ codeConfig.setControllerParent("");*/
 ```
 #### step3
 ```java
+ //=================================step3:controller相关设置,可以跳过整个step3===============================================
+
+/*//设置生成的controller里面不带基本方法
+codeConfig.setExcludeControllerMethod();*/
+//设置方法参数需要校验不为null
+codeConfig.setControllerMethodNeedValid();
+/*//设置生成的方法为restful请求
+codeConfig.setMethodRestful();*/
+```
+#### step4
+```java
 //=================================step3:设置需要的表list===============================================
 List<String> tableNames = new ArrayList<>();
 for (int i = 0; i < 6; i++) {
@@ -47,7 +58,7 @@ for (int i = 0; i < 6; i++) {
     tableNames.add("mydata");//表名
 }
 ```
-#### step4
+#### step5
 ```java
 //=================================step4:执行===============================================
 tableNames.forEach(tableName -> {
