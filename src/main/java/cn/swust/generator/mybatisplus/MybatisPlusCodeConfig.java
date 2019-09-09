@@ -24,10 +24,10 @@ import java.util.regex.Pattern;
  */
 public class MybatisPlusCodeConfig {
 
-    String url;
-    String driverName;
-    String username;
-    String password;
+    private String url;
+    private String driverName;
+    private String username;
+    private String password;
     /**
      * 项目路径
      */
@@ -51,33 +51,33 @@ public class MybatisPlusCodeConfig {
 
     //表的第一列是id，且自增，那么会加上注解 @TableId(type = IdType.AUTO)，以此来消除第一列名字不为"id"，但是也是主键id的情况。
     // 如果不是需要更改为false
-    boolean firstFieldIsId = true;
+    private boolean firstFieldIsId = true;
 
 
     //service是否需要继承关系
-    boolean serviceNeedExtend = false;
+    private boolean serviceNeedExtend = false;
     //service接口的父类为plus的service
-    boolean serviceParentIsPlus = false;
+    private boolean serviceParentIsPlus = false;
     //service实现类的父类为plus的service
-    boolean serviceImplParentIsPlus = false;
+    private boolean serviceImplParentIsPlus = false;
 
 
     //不需要生成controller包含基本方法
-    boolean needControllerMethod = true;
+    private boolean needControllerMethod = true;
     //controller入参是否需要校验
-    boolean needValid = false;
+    private boolean needValid = false;
     //设置controller生成的方法为rest风格的请求
-    boolean methodRestful = false;
+    private boolean methodRestful = false;
 
 
     //service接口的父类为plus的service
-    String serviceParentClz = "";
+    private String serviceParentClz = "";
     //service实现类的父类为plus的service
-    String serviceImplParentClz = "";
+    private String serviceImplParentClz = "";
 
 
-    String entryParentClz = "";
-    String controllerParentClz = "";
+    private String entryParentClz = "";
+    private String controllerParentClz = "";
 
     /**
      * @author : LiuMing
