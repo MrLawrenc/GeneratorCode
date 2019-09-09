@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guotie.mdc.sys.bubase.mapper.BaseDicMapper">
+    <!--当前表名：base_dic-->
+    <!--#{模板引擎不会再这个标签包裹的字符中寻找FTL标签-->
+    <select id="selectByConditions" parameterType="java.util.Map" resultType="com.guotie.mdc.sys.bubase.entity.BaseDic">
+        select * from base_dic
+        <where>
+            <if test="dic_id != null and dic_id != ''">and dic_id=#{dic_id}</if>
+            <if test="dic_name != null and dic_name != ''">and dic_name=#{dic_name}</if>
+            <if test="category != null and category != ''">and category=#{category}</if>
+            <if test="parent_id != null and parent_id != ''">and parent_id=#{parent_id}</if>
+            <if test="dic_desc != null and dic_desc != ''">and dic_desc=#{dic_desc}</if>
+        </where>
+        <if test="#{currentPage} != '' and #{pageSize} != ''">
+            limit (#{currentPage}-1)*#{pageSize},#{pageSize}
+        </if>
+    </select>
+</mapper>
