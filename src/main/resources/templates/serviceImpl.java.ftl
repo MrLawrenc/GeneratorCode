@@ -1,6 +1,9 @@
 package ${package.ServiceImpl};
 
+import java.util.Map;
+import java.util.List;
 import ${package.Entity}.${entity};
+import java.lang.Override;
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
@@ -29,4 +32,15 @@ private ${table.mapperName} mapper;
 <#else>
 </#if>
 
+<#if cfg.needAutowiredMapper??>
+    @Override
+    public List<${entity}> selectByConditions(Map<String,Object> params){
+    return mapper.selectByConditions(params);
+    }
+<#else>
+    @Override
+    public List<${entity}> selectByConditions(Map<String,Object> params){
+    return baseMapper.selectByConditions(params);
+    }
+</#if>
 }

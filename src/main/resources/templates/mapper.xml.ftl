@@ -31,4 +31,18 @@
     </sql>
 
 </#if>
+    <!--<#noparse>#{</#noparse>模板引擎不会再这个标签包裹的字符中寻找FTL标签-->
+<select id="selectByConditions" parameterType="java.util.Map" resultType="${package.Entity}.${entity}">
+select * from ${table.name}
+ <where>
+    <#list table.fields as field>
+        <if test="${field.name} != null and ${field.name} != ''"> and ${field.name}=<#noparse>#{</#noparse>${field.name}<#noparse>}</if></#noparse>
+    </#list>
+</where>
+    <if test="<#noparse>#{</#noparse>currentPage} != '' and <#noparse>#{</#noparse>pageSize} != ''">
+        limit (<#noparse>#{</#noparse>currentPage}-1)*<#noparse>#{</#noparse>pageSize},<#noparse>#{</#noparse>pageSize}
+    </if>
+
+
+</select>
 </mapper>

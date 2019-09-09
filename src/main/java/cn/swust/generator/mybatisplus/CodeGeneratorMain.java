@@ -36,8 +36,8 @@ public class CodeGeneratorMain {
 
         /*//设置生成的controller里面不带基本方法
         codeConfig.setExcludeControllerMethod();*/
-        //设置方法参数需要校验不为null
-        codeConfig.setControllerMethodNeedValid();
+        /*//设置方法参数需要校验不为null
+        codeConfig.setControllerMethodNeedValid();*/
         /*//设置生成的方法为restful请求
         codeConfig.setMethodRestful();*/
 

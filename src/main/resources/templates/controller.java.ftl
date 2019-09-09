@@ -1,5 +1,6 @@
 package ${package.Controller};
 
+import java.util.Map;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
 //import ${package.Entity}.${entity};
@@ -57,6 +58,29 @@ import org.springframework.web.bind.annotation.GetMapping;
         return ResponseResult.success(service.list());
         }
 
+        /**
+        * 分页查询
+        */
+        @GetMapping("/pageList")
+        public ResponseResult queryPage(<#if cfg.needValid??>@NonNull</#if> int currentPage,<#if cfg.needValid??>@NonNull</#if> int pageSize) {
+        Page<${entity}> page = new Page<>(currentPage, pageSize);
+                      IPage<${entity}> iPage = service.page(page, null);
+        return ResponseResult.success(iPage);
+        }
+
+        /**
+        * 高级查询
+        */
+        @GetMapping("/selectByConditions")
+        public ResponseResult selectByConditions(Map<String,Object> params){
+            if (params.get("currentPage") == null) {
+            params.put("currentPage", "");
+            }
+            if (params.get("pageSize") == null) {
+            params.put("pageSize", "");
+            }
+            return ResponseResult.success(service.selectByConditions(params));
+        }
 
         /**
         * 新增
