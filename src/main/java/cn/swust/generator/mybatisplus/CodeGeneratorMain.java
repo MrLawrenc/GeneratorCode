@@ -13,8 +13,8 @@ public class CodeGeneratorMain {
 
         //=================================step1:传入数据库连接信息构造对象===============================================
         //构造器参数分别为url driver username password
-        MybatisPlusCodeConfig codeConfig = new MybatisPlusCodeConfig("jdbc:mysql://192.168.1.85:3306/metro?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC",
-                "com.mysql.jdbc.Driver", "metro", "@123456Aa");
+        MybatisPlusCodeConfig codeConfig = new MybatisPlusCodeConfig("jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC",
+                "com.mysql.jdbc.Driver", "root", "admin");
 
 
         //=================================step2:如果service不需要继承关系可以跳过整个step2===============================================
@@ -44,7 +44,7 @@ public class CodeGeneratorMain {
         //=================================step4:设置表===============================================
         List<String> tableNames = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-            tableNames.add("base_dic");//表名
+            tableNames.add("employee");//表名
             /* tableNames.add("base_line");//表名
             tableNames.add("base_line_curvature");//表名
            tableNames.add("base_line_hstr");//表名

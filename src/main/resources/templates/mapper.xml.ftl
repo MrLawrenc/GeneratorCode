@@ -39,10 +39,10 @@ select * from ${table.name}
         <if test="${field.name} != null and ${field.name} != ''"> and ${field.name}=<#noparse>#{</#noparse>${field.name}<#noparse>}</if></#noparse>
     </#list>
 </where>
-    <if test="<#noparse>#{</#noparse>currentPage} != '' and <#noparse>#{</#noparse>pageSize} != ''">
-        limit (<#noparse>#{</#noparse>currentPage}-1)*<#noparse>#{</#noparse>pageSize},<#noparse>#{</#noparse>pageSize}
-    </if>
-
+<bind name="key_offset" value="(currentPage-1)*pageSize"></bind>
+      <if test="currentPage != '' and  pageSize != ''">
+       limit <#noparse>#{</#noparse>key_offset<#noparse>}</#noparse>,<#noparse>#{</#noparse>pageSize<#noparse>}</#noparse>
+      </if>
 
 </select>
 </mapper>
