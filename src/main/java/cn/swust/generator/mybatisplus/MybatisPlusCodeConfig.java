@@ -32,6 +32,12 @@ public class MybatisPlusCodeConfig {
      * 项目路径
      */
     private String projectPath = System.getProperty("user.dir");
+    //生成文件的位置，如C://test/
+    private String mapperLocation;
+    private String serviceLocation;
+    private String serviceImplLocation;
+    private String controllerLocation;
+    private String entryLocation;
     /**
      * 模板存放位置
      */
@@ -42,6 +48,12 @@ public class MybatisPlusCodeConfig {
     private String templatePathMapper = "/templates/mapper.java.ftl";
     private String templatePathMapperXML = "/templates/mapper.xml.ftl";
     private String templatePathJsp = "/templates/view.jsp.ftl";
+
+    //表的第一列是id，且自增，那么会加上注解 @TableId(type = IdType.AUTO)，以此来消除第一列名字不为"id"，但是也是主键id的情况。
+    // 如果不是需要更改为false
+    boolean firstFieldIsId = true;
+
+
     //service是否需要继承关系
     boolean serviceNeedExtend = false;
     //service接口的父类为plus的service
@@ -131,6 +143,16 @@ public class MybatisPlusCodeConfig {
         methodRestful = true;
     }
 
+    //第一个字段(表的第一列不是主键id或者自增的)
+    public void setFirstFieldNoId() {
+        firstFieldIsId = false;
+    }
+
+    //设置entry的生成文件夹，如;location="C://test/"
+    public void setEntryLocation(String location) {
+        entryLocation = location;
+    }
+
     //构造方法
     public MybatisPlusCodeConfig(String url, String driverName, String username, String password) {
         this.url = url;
@@ -216,6 +238,7 @@ public class MybatisPlusCodeConfig {
                 //前提是继承了mybatis-plus的service才能设定生成controller的基本方法
                 map.put("needControllerMethod", serviceParentIsPlus && needControllerMethod ? "ss" : null);
 
+                map.put("firstFieldIsId", firstFieldIsId ? "ss" : null);
 
                 map.put("needValid", serviceParentIsPlus && needControllerMethod && needValid ? "ss" : null);
                 map.put("methodRestful", serviceParentIsPlus && needControllerMethod && methodRestful ? "ss" : null);
@@ -294,7 +317,8 @@ public class MybatisPlusCodeConfig {
         focList.add(new FileOutConfig(templatePathEntity) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return javaLocation + "/entity/" + tableInfo.getEntityName() + StringPool.DOT_JAVA;
+                String entryPrefix = (StringUtils.isEmpty(entryLocation) ? javaLocation + "/entity/" : entryLocation);
+                return entryPrefix + tableInfo.getEntityName() + StringPool.DOT_JAVA;
             }
         });
 
@@ -303,7 +327,8 @@ public class MybatisPlusCodeConfig {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 tableInfo.setXmlName(convertToLowercase(tableInfo.getEntityName()));
-                return javaLocation + "/controller/" + tableInfo.getEntityName() + "Controller" + StringPool.DOT_JAVA;
+                String controllerPrefix = (StringUtils.isEmpty(controllerLocation) ? javaLocation + "/controller/" : controllerLocation);
+                return controllerPrefix + tableInfo.getEntityName() + "Controller" + StringPool.DOT_JAVA;
             }
         });
 
@@ -311,7 +336,8 @@ public class MybatisPlusCodeConfig {
         focList.add(new FileOutConfig(templatePathService) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return javaLocation + "/service/" + tableInfo.getEntityName() + "Service" + StringPool.DOT_JAVA;
+                String servicePrefix = (StringUtils.isEmpty(serviceLocation) ? javaLocation + "/service/" : serviceLocation);
+                return servicePrefix + tableInfo.getEntityName() + "Service" + StringPool.DOT_JAVA;
             }
         });
 
@@ -319,7 +345,8 @@ public class MybatisPlusCodeConfig {
         focList.add(new FileOutConfig(templatePathServiceImpl) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return javaLocation + "/service/impl/" + tableInfo.getEntityName() + "ServiceImpl" + StringPool.DOT_JAVA;
+                String serviceImplPrefix = (StringUtils.isEmpty(serviceImplLocation) ? javaLocation + "/service/impl/" : serviceImplLocation);
+                return serviceImplPrefix + tableInfo.getEntityName() + "ServiceImpl" + StringPool.DOT_JAVA;
             }
         });
 
@@ -327,7 +354,8 @@ public class MybatisPlusCodeConfig {
         focList.add(new FileOutConfig(templatePathMapper) {
             @Override
             public String outputFile(TableInfo tableInfo) {
-                return javaLocation + "/mapper/" + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_JAVA;
+                String mapperPrefix = (StringUtils.isEmpty(mapperLocation) ? javaLocation + "/mapper/" : mapperLocation);
+                return mapperPrefix + tableInfo.getEntityName() + "Mapper" + StringPool.DOT_JAVA;
             }
         });
 

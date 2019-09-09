@@ -1,5 +1,6 @@
 package cn.swust.generator.mybatisplus;
 
+import java.lang.module.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,22 @@ public class CodeGeneratorMain {
                 "com.mysql.jdbc.Driver", "root", "admin");
 
 
-        //=================================step2:如果service不需要继承关系可以跳过整个step2===============================================
-        /*step2.1:如果service需要继承，那么下面两个设置2选1即可。如果不需要继承关系，可以不设置，两个都注销即可*/
+        //=================================step2:实体类相关设置，可以完全跳过step2===============================================
+        /*设置table的第一列即实体的第一个字段不为自增主键(默认表的第一列是自增主键)
+         *
+         * 如果启用下面这行代码，在插入数据的时候，没有设置主键id的值，那么mybatis-plus会使用雪花算法生成id插入，
+         * 可能会报和数据库id类型不一致的错误。
+         *
+         * 不启用会在第一个字段加上自增主键的注解
+         * */
+        //codeConfig.setFirstFieldNoId();
+
+        /*//设置生成的实体类的文件位置
+        codeConfig.setEntryLocation("F:\\JavaProject\\GeneratorCode\\src\\main\\java\\com\\guotie\\mdc\\sys\\bubase\\entity\\");*/
+
+
+        //=================================step3:如果service不需要继承关系可以跳过整个step3===============================================
+        /*step3.1:如果service需要继承，那么下面两个设置2选1即可。如果不需要继承关系，可以不设置，两个都注销即可*/
 
         //设置为继承mybatis-plus的service
         codeConfig.setServiceParentPlus();
@@ -27,12 +42,12 @@ public class CodeGeneratorMain {
         codeConfig.setServiceParentOther("cn.swust.generator.base.service.BaseService");
         codeConfig.setServiceImplParentOther("cn.swust.generator.base.service.impl.BaseServiceImpl");*/
 
-        /*step2.2:如果entry和controller需要继承，不需要继承可以不设置*/
+        /*step3.2:如果entry和controller需要继承，不需要继承可以不设置*/
       /*  codeConfig.setEntryParent("");
         codeConfig.setControllerParent("");*/
 
 
-        //=================================step3:controller相关设置,可以跳过整个step3===============================================
+        //=================================step4:controller相关设置,可以跳过整个step4===============================================
 
         /*//设置生成的controller里面不带基本方法
         codeConfig.setExcludeControllerMethod();*/
@@ -41,10 +56,11 @@ public class CodeGeneratorMain {
         /*//设置生成的方法为restful请求
         codeConfig.setMethodRestful();*/
 
-        //=================================step4:设置表===============================================
+        //=================================step5:设置需要生成的表===============================================
         List<String> tableNames = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
-            tableNames.add("employee");//表名
+//            tableNames.add("employee");//表名
+            tableNames.add("user");//表名
             /* tableNames.add("base_line");//表名
             tableNames.add("base_line_curvature");//表名
            tableNames.add("base_line_hstr");//表名
@@ -67,7 +83,7 @@ public class CodeGeneratorMain {
         }
 
 
-        //=================================step5:执行===============================================
+        //=================================step6:执行===============================================
         tableNames.forEach(tableName -> {
             codeConfig.codeGenerator(tableName, "com.guotie.mdc.sys.bubase");
         });

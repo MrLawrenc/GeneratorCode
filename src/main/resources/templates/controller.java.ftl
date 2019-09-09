@@ -3,7 +3,7 @@ package ${package.Controller};
 import java.util.Map;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
-//import ${package.Entity}.${entity};
+import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
 <#if cfg.needValid??>
     import org.springframework.lang.NonNull;
@@ -50,6 +50,13 @@ import org.springframework.web.bind.annotation.GetMapping;
         public  ResponseResult getById(<#if cfg.needValid??>@NonNull</#if> int id) {
         return ResponseResult.success(service.getById(id));
         }
+         /**
+          * 批量查询
+          */
+        @PostMapping("/listByIds")
+        public ResponseResult getByIds(List<Integer> ids) {
+            return ResponseResult.success(service.listByIds(ids));
+        }
         /**
         * 查询所有
         */
@@ -92,14 +99,26 @@ import org.springframework.web.bind.annotation.GetMapping;
             @PostMapping("/add")
         </#if>
         public ResponseResult ${table.entityPath}Add(<#if cfg.needValid??>@NonNull</#if> ${entity} ${table.entityPath}) {
-
         boolean b = service.save(${table.entityPath});
         return b ? ResponseResult.success() : ResponseResult.error();
         }
 
+         /**
+          * 批量新增
+          */
+         <#if methodRestful??>
+          @PutMapping("/batchAdd")
+          <#else>
+          @PostMapping("/batchAdd")
+          </#if>
+        public ResponseResult employeeBatchAdd(List<${entity}> ${table.entityPath}s) {
+            boolean b = service.saveBatch(${table.entityPath}s);
+            return b ? ResponseResult.success() : ResponseResult.error();
+        }
+
 
         /**
-        * 保存和修改公用的
+        * 修改
         * @param ${table.entityPath}  传递的实体
         */
         @PostMapping("/updateById")

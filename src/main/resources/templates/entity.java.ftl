@@ -9,6 +9,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 </#if>
 
 /**
@@ -29,7 +31,10 @@ public class  ${entity} {
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
     <#if field.keyFlag>
-        <#assign keyPropertyName="${field.propertyName}"/>
+    <#if cfg.firstFieldIsId??>
+     @TableId(type = IdType.AUTO)
+    </#if>
+    <#assign keyPropertyName="${field.propertyName}"/>
     </#if>
     <#if field.comment!?length gt 0>
         <#if swagger2>
