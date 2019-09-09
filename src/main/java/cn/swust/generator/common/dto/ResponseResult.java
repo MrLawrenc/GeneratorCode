@@ -4,12 +4,6 @@ import cn.swust.generator.common.enums.StatusEnums;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-/**
- * 全局返回结果集
- *
- * @author Tellsea
- * @Description Created on 2019/7/13
- */
 @Data
 @AllArgsConstructor
 public class ResponseResult {
@@ -36,6 +30,10 @@ public class ResponseResult {
 
     public static ResponseResult success() {
         return new ResponseResult(StatusEnums.SUCCESS);
+    }
+
+    public static ResponseResult success(String msg) {
+        return new ResponseResult(StatusEnums.SUCCESS, msg);
     }
 
     public static ResponseResult success(Object data) {

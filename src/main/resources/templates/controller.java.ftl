@@ -1,37 +1,122 @@
 package ${package.Controller};
 
+import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ${package.Entity}.${entity};
+//import ${package.Entity}.${entity};
 import ${package.Service}.${table.serviceName};
+<#if cfg.needValid??>
+    import org.springframework.lang.NonNull;
+</#if>
 <#if restControllerStyle>
-import org.springframework.web.bind.annotation.RestController;
+    import org.springframework.web.bind.annotation.RestController;
 <#else>
-import org.springframework.stereotype.Controller;
+    import org.springframework.stereotype.Controller;
 </#if>
 <#if superControllerClassPackage??>
-import ${superControllerClassPackage};
+    import ${superControllerClassPackage};
 </#if>
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 /**
- * ${table.comment!} 前端控制器
- *
- * @author ${author}
- * @Description Created on ${date}
- */
+* ${table.comment!} 前端控制器
+*
+* @author ${author}
+* @Description Created on ${date}
+*/
 <#if restControllerStyle>
-@RestController
+    @RestController
 <#else>
-@Controller
+    @Controller
 </#if>
 <#if kotlin>
-class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
+    class ${table.controllerName}<#if superControllerClass??> : ${superControllerClass}()</#if>
 <#else>
-<#if superControllerClass??>
-public class ${table.controllerName} extends ${superControllerClass}<${entity}> {
-<#else>
-public class ${table.controllerName} {
-</#if>
-@Autowired
-private ${table.serviceName} service;
-}
+    @RequestMapping("/${table.entityPath}")
+    <#if superControllerClass??>
+        public class ${table.controllerName} extends ${superControllerClass}<${entity}> {
+    <#else>
+        public class ${table.controllerName} {
+    </#if>
+    @Autowired
+    private ${table.serviceName} service;
+
+    <#if cfg.needControllerMethod??>
+        /**
+        * 根据id查询
+        */
+        @GetMapping("/getById")
+        public  ResponseResult getById(<#if cfg.needValid??>@NonNull</#if> int id) {
+        return ResponseResult.success(service.getById(id));
+        }
+        /**
+        * 查询所有
+        */
+        @GetMapping("/list")
+        public  ResponseResult list() {
+        return ResponseResult.success(service.list());
+        }
+
+
+        /**
+        * 新增
+        * @param ${table.entityPath}  传递的实体
+        */
+        <#if methodRestful??>
+            @PutMapping("/add")
+        <#else>
+            @PostMapping("/add")
+        </#if>
+        public ResponseResult ${table.entityPath}Add(<#if cfg.needValid??>@NonNull</#if> ${entity} ${table.entityPath}) {
+
+        boolean b = service.save(${table.entityPath});
+        return b ? ResponseResult.success() : ResponseResult.error();
+        }
+
+
+        /**
+        * 保存和修改公用的
+        * @param ${table.entityPath}  传递的实体
+        */
+        @PostMapping("/updateById")
+        public ResponseResult ${table.entityPath}Update(<#if cfg.needValid??>@NonNull</#if> ${entity} ${table.entityPath}) {
+        boolean b = service.updateById(${table.entityPath});
+        return b ? ResponseResult.success() : ResponseResult.error();
+        }
+        /**
+        * 批量根据id更新
+        */
+        @PostMapping("/updateBatchByIds")
+        public ResponseResult ${table.entityPath}Update(<#if cfg.needValid??>@NonNull</#if>  List<${entity}> ${table.entityPath}) {
+        boolean b = service.updateBatchById(${table.entityPath});
+        return b ? ResponseResult.success() : ResponseResult.error();
+        }
+        /**
+        * 根据id删除对象
+        * @param id  实体ID
+        */
+        <#if methodRestful??>
+            @DeleteMapping("/deleteByid")
+        <#else>
+            @GetMapping("/deleteByid")
+        </#if>
+        public ResponseResult ${table.entityPath}Delete(<#if cfg.needValid??>@NonNull</#if> int id){
+        boolean b = service.removeById(id);
+        return b ? ResponseResult.success() : ResponseResult.error();
+        }
+
+        /**
+        * 批量删除对象
+        */
+        @PostMapping("/deleteBatchByIds")
+        public ResponseResult deleteBatchIds(<#if cfg.needValid??>@NonNull</#if>  List<Integer> ids){
+        boolean b = service.removeByIds(ids);
+        return b ? ResponseResult.success() : ResponseResult.error();
+        }
+
+
+    </#if>
+
+
+    }
 </#if>

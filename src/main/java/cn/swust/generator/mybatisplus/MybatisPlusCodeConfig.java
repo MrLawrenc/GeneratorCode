@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +48,15 @@ public class MybatisPlusCodeConfig {
     boolean serviceParentIsPlus = false;
     //service实现类的父类为plus的service
     boolean serviceImplParentIsPlus = false;
+
+
+    //不需要生成controller包含基本方法
+    boolean needControllerMethod = true;
+    //controller入参是否需要校验
+    boolean needValid = false;
+    //设置controller生成的方法为rest风格的请求
+    boolean methodRestful = false;
+
 
     //service接口的父类为plus的service
     String serviceParentClz = "";
@@ -104,6 +116,21 @@ public class MybatisPlusCodeConfig {
         return this;
     }
 
+    //controller不需要基本方法
+    public void setExcludeControllerMethod() {
+        this.needControllerMethod = false;
+    }
+
+    //设置controller入参需要校验
+    public void setControllerMethodNeedValid() {
+        this.needValid = true;
+    }
+
+    //设置方法为restful风格请求
+    public void setMethodRestful() {
+        methodRestful = true;
+    }
+
     //构造方法
     public MybatisPlusCodeConfig(String url, String driverName, String username, String password) {
         this.url = url;
@@ -135,7 +162,7 @@ public class MybatisPlusCodeConfig {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("lmy定义的模板引擎生成的代码");
+        gc.setAuthor("lmy");
         gc.setFileOverride(true);
 //        gc.setEnableCache(true);
         gc.setServiceName("%sService");
@@ -185,6 +212,13 @@ public class MybatisPlusCodeConfig {
                 } else {
                     map.put("serviceNeedExtends", null);
                 }
+
+                //前提是继承了mybatis-plus的service才能设定生成controller的基本方法
+                map.put("needControllerMethod", serviceParentIsPlus && needControllerMethod ? "ss" : null);
+
+
+                map.put("needValid", serviceParentIsPlus && needControllerMethod && needValid ? "ss" : null);
+                map.put("methodRestful", serviceParentIsPlus && needControllerMethod && methodRestful ? "ss" : null);
                 this.setMap(map);
             }
         };

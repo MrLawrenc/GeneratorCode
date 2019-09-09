@@ -4,12 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 /**
- * 异常枚举类
- *
- * @author Tellsea
- * @Description Created on 2019/7/13
+ * @date : 2019/9/9 11:30
+ * @description :   异常枚举类
  */
 @Getter
 @NoArgsConstructor
