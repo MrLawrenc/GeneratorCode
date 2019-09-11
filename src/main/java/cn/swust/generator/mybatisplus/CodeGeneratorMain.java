@@ -1,6 +1,5 @@
 package cn.swust.generator.mybatisplus;
 
-import java.lang.module.Configuration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +13,8 @@ public class CodeGeneratorMain {
 
         //=================================step1:传入数据库连接信息构造对象===============================================
         //构造器参数分别为url driver username password
-        MybatisPlusCodeConfig codeConfig = new MybatisPlusCodeConfig("jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC",
-                "com.mysql.jdbc.Driver", "root", "admin");
+        MybatisPlusCodeConfig codeConfig = new MybatisPlusCodeConfig("jdbc:mysql://192.168.1.85:3306/metro?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC",
+                "com.mysql.jdbc.Driver", "metro", "@123456Aa");
 
 
         //=================================step2:实体类相关设置，可以完全跳过step2===============================================
@@ -60,7 +59,7 @@ public class CodeGeneratorMain {
         List<String> tableNames = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
 //            tableNames.add("employee");//表名
-            tableNames.add("user");//表名
+            tableNames.add("base_dic");//表名
             /* tableNames.add("base_line");//表名
             tableNames.add("base_line_curvature");//表名
            tableNames.add("base_line_hstr");//表名

@@ -36,7 +36,7 @@
 select * from ${table.name}
  <where>
     <#list table.fields as field>
-        <if test="${field.name} != null and ${field.name} != ''"> and ${field.name}=<#noparse>#{</#noparse>${field.name}<#noparse>}</if></#noparse>
+        <if test="${field.propertyName} != null and ${field.propertyName} != ''"> and ${field.name}=<#noparse>#{</#noparse>${field.propertyName}<#noparse>}</if></#noparse>
     </#list>
 </where>
     <choose>

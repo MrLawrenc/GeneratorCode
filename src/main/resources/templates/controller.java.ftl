@@ -80,10 +80,8 @@ import org.springframework.web.bind.annotation.GetMapping;
         */
         @GetMapping("/selectByConditions")
         public ResponseResult selectByConditions(Map<String,Object> params){
-            if (params.get("currentPage") == null) {
+            if (params.get("currentPage") == null || params.get("pageSize") == null) {
             params.put("currentPage", "");
-            }
-            if (params.get("pageSize") == null) {
             params.put("pageSize", "");
             }
             return ResponseResult.success(service.selectByConditions(params));
