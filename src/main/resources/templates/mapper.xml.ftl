@@ -39,6 +39,14 @@ select * from ${table.name}
         <if test="${field.name} != null and ${field.name} != ''"> and ${field.name}=<#noparse>#{</#noparse>${field.name}<#noparse>}</if></#noparse>
     </#list>
 </where>
+    <choose>
+        <when test="sidx != null and sidx.trim() != ''">
+            order by  <#noparse>${</#noparse>sidx<#noparse>}</#noparse>  <#noparse>${</#noparse>order<#noparse>}</#noparse>
+        </when>
+        <otherwise>
+            <!--order by id desc-->
+        </otherwise>
+    </choose>
 <bind name="key_offset" value="(currentPage-1)*pageSize"></bind>
       <if test="currentPage != '' and  pageSize != ''">
        limit <#noparse>#{</#noparse>key_offset<#noparse>}</#noparse>,<#noparse>#{</#noparse>pageSize<#noparse>}</#noparse>
