@@ -48,11 +48,7 @@ private ${table.mapperName} mapper;
     }
 @Override
 public List<${entity}> list(Wrapper<${entity}> queryWrapper) {
-        if (queryWrapper == null) {
-        return super.list();
-        } else {
-        return super.list(queryWrapper);
-        }
-        }
+    return queryWrapper == null ? super.list() : super.list(queryWrapper);
+ }
 </#if>
 }
