@@ -40,6 +40,10 @@ private ${table.mapperName} mapper;
 <#else>
     @Override
     public List<${entity}> selectByConditions(Map<String,Object> params){
+    if (params.get("currentPage") == null || params.get("pageSize") == null) {
+    params.put("currentPage", "");
+    params.put("pageSize", "");
+    }
     return baseMapper.selectByConditions(params);
     }
 </#if>

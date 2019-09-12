@@ -16,6 +16,7 @@ import ${package.Service}.${table.serviceName};
 <#if superControllerClassPackage??>
     import ${superControllerClassPackage};
 </#if>
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -79,11 +80,8 @@ import org.springframework.web.bind.annotation.GetMapping;
         * 高级查询
         */
         @GetMapping("/selectByConditions")
-        public ResponseResult selectByConditions(Map<String,Object> params){
-            if (params.get("currentPage") == null || params.get("pageSize") == null) {
-            params.put("currentPage", "");
-            params.put("pageSize", "");
-            }
+        public ResponseResult selectByConditions(@RequestParam Map<String,Object> params){
+
             return ResponseResult.success(service.selectByConditions(params));
         }
 
