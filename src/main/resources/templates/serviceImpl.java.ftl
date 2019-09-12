@@ -46,5 +46,13 @@ private ${table.mapperName} mapper;
     }
     return baseMapper.selectByConditions(params);
     }
+@Override
+public List<${entity}> list(Wrapper<${entity}> queryWrapper) {
+        if (queryWrapper == null) {
+        return super.list();
+        } else {
+        return super.list(queryWrapper);
+        }
+        }
 </#if>
 }

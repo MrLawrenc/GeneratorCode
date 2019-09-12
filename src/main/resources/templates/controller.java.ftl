@@ -63,7 +63,7 @@ import org.springframework.web.bind.annotation.GetMapping;
         */
         @GetMapping("/list")
         public  ResponseResult list() {
-        return ResponseResult.success(service.list());
+        return ResponseResult.success(service.list(null));
         }
 
         /**
