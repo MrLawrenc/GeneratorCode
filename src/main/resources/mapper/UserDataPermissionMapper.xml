@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guotie.mdc.sys.bubase.mapper.UserDataPermissionMapper">
+<!--当前表名：user_data_permission-->
+    <!--#{模板引擎不会再这个标签包裹的字符中寻找FTL标签-->
+<select id="selectByConditions" parameterType="java.util.Map" resultType="com.guotie.mdc.sys.bubase.entity.UserDataPermission">
+select * from user_data_permission
+ <where>
+        <if test="id != null and id != ''"> and id=#{id}</if>
+        <if test="userId != null and userId != ''"> and user_id=#{userId}</if>
+        <if test="dataPermissionId != null and dataPermissionId != ''"> and data_permission_id=#{dataPermissionId}</if>
+</where>
+    <choose>
+        <when test="sidx != null and sidx.trim() != ''">
+            order by  ${sidx}  ${order}
+        </when>
+        <otherwise>
+            <!--order by id desc-->
+        </otherwise>
+    </choose>
+<bind name="key_offset" value="(currentPage-1)*pageSize"></bind>
+      <if test="currentPage != '' and  pageSize != ''">
+       limit #{key_offset},#{pageSize}
+      </if>
+
+</select>
+</mapper>

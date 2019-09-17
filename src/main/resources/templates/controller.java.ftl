@@ -54,8 +54,8 @@ import org.springframework.web.bind.annotation.GetMapping;
          /**
           * 批量查询
           */
-        @PostMapping("/listByIds")
-        public ResponseResult getByIds(List<Integer> ids) {
+        @GetMapping("/listByIds")
+        public ResponseResult getByIds(@RequestParam(name = "ids") List<Integer> ids) {
             return ResponseResult.success(service.listByIds(ids));
         }
         /**
