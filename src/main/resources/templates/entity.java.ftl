@@ -5,6 +5,7 @@ import ${pkg};
 </#list>
 
 import com.alibaba.fastjson.annotation.JSONField;
+import org.springframework.format.annotation.DateTimeFormat;
 <#if entityLombokModel>
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -66,10 +67,10 @@ public class  ${entity} {
     @TableLogic
     </#if>
     <#if "create_time" == field.name>
-    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(format = "yyyy-MM-dd HH:mm:ss")
     </#if>
     <#if "modify_time" == field.name>
-        @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(format = "yyyy-MM-dd HH:mm:ss")
     </#if>
     private ${field.propertyType} ${field.propertyName};
 

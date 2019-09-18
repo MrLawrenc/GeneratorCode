@@ -59,8 +59,8 @@ public class CodeGeneratorMain {
         List<String> tableNames = new ArrayList<>();
         for (int i = 0; i < 1; i++) {
 //            tableNames.add("employee");//表名
-            tableNames.add("base_pole");//表名
-            /* tableNames.add("data_permission");//表名
+           /* tableNames.add("base_pole");//表名
+             tableNames.add("data_permission");//表名
             tableNames.add("user_data_permission");//表名
             tableNames.add("base_dic");//表名
             tableNames.add("base_line");//表名
@@ -82,6 +82,7 @@ public class CodeGeneratorMain {
             tableNames.add("stat_trck_alarm_w");//表名
             tableNames.add("stat_trck_dev_status");//表名
             tableNames.add("sys_dic");//表名*/
+            tableNames.add("stat_trck_dev_status");
         }
 
 
