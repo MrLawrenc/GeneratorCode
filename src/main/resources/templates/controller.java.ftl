@@ -107,7 +107,7 @@ import org.springframework.web.bind.annotation.GetMapping;
           <#else>
           @PostMapping("/batchAdd")
           </#if>
-        public ResponseResult employeeBatchAdd(List<${entity}> ${table.entityPath}s) {
+        public ResponseResult ${table.entityPath}BatchAdd(List<${entity}> ${table.entityPath}s) {
             boolean b = service.saveBatch(${table.entityPath}s);
             return b ? ResponseResult.success() : ResponseResult.error();
         }
