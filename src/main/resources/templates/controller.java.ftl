@@ -135,9 +135,9 @@ import org.springframework.web.bind.annotation.GetMapping;
         * @param id  实体ID
         */
         <#if methodRestful??>
-            @DeleteMapping("/deleteByid")
+            @DeleteMapping("/deleteById")
         <#else>
-            @GetMapping("/deleteByid")
+            @GetMapping("/deleteById")
         </#if>
         public ResponseResult ${table.entityPath}Delete(<#if cfg.needValid??>@NonNull</#if> int id){
         boolean b = service.removeById(id);
@@ -147,8 +147,8 @@ import org.springframework.web.bind.annotation.GetMapping;
         /**
         * 批量删除对象
         */
-        @PostMapping("/deleteBatchByIds")
-        public ResponseResult deleteBatchIds(<#if cfg.needValid??>@NonNull</#if>  List<Integer> ids){
+        @GetMapping("/deleteBatchByIds")
+        public ResponseResult deleteBatchIds(@RequestParam(name = "ids") <#if cfg.needValid??>@NonNull</#if>  List<Integer> ids){
         boolean b = service.removeByIds(ids);
         return b ? ResponseResult.success() : ResponseResult.error();
         }
