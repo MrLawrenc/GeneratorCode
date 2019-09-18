@@ -67,10 +67,19 @@ public class  ${entity} {
     @TableLogic
     </#if>
     <#if "create_time" == field.name>
-        @DateTimeFormat(format = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    </#if>
+    <#if "update_time" == field.name>
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    </#if>
+    <#if "updateTime" == field.name>
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    </#if>
+    <#if "createTime" == field.name>
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     </#if>
     <#if "modify_time" == field.name>
-        @DateTimeFormat(format = "yyyy-MM-dd HH:mm:ss")
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     </#if>
     private ${field.propertyType} ${field.propertyName};
 

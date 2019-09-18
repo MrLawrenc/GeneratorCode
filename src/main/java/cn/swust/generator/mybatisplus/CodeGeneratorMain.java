@@ -82,7 +82,7 @@ public class CodeGeneratorMain {
             tableNames.add("stat_trck_alarm_w");//表名
             tableNames.add("stat_trck_dev_status");//表名
             tableNames.add("sys_dic");//表名*/
-            tableNames.add("stat_trck_dev_status");
+            tableNames.add("base_org");
         }
 
 
