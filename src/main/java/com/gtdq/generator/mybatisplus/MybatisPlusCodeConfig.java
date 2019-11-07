@@ -170,7 +170,8 @@ public class MybatisPlusCodeConfig {
          */
         String end = packageName.replace(".", "/");
         System.out.println(end);
-        String javaLocation = projectPath + "/src/main/java/" + end + "/";//生成的java文件所在目录
+        //生成的java文件所在目录
+        String javaLocation = projectPath + "/src/main/java/" + end + "/";
         String xmlLocation = projectPath + "/src/main/resources/mapper/";
         String pageLocation = projectPath + "/src/main/resources/views/";
 

@@ -71,6 +71,6 @@ public class CodeGeneratorMain {
 
 
         //=================================step6:执行===============================================
-        tableNames.forEach(tableName -> codeConfig.codeGenerator(tableName, "com.guotie.mdc.sys.bubase"));
+        tableNames.forEach(tableName -> codeConfig.codeGenerator(tableName, "com"));
     }
 }
