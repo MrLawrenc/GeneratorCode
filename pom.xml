@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.tellsea</groupId>
-    <artifactId>mybatis-plus-code</artifactId>
+    <artifactId>generator-code</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>mybatis-plus-code</name>
+    <name>generator-code</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
