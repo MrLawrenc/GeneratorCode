@@ -1,0 +1,12 @@
+    <#if field.name?contains("time")>
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    </#if>
+    <#if field.name?contains("Time")>
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    </#if>
+    <#if field.name?contains("date")>
+        @DateTimeFormat(format = "yyyy-MM-dd HH:mm:ss")
+    </#if>
+    <#if field.name?contains("Date")>
+        @DateTimeFormat(format = "yyyy-MM-dd HH:mm:ss")
+    </#if>
