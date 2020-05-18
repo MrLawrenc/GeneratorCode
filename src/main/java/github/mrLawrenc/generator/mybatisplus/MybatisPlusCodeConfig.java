@@ -1,4 +1,4 @@
-package com.gtdq.generator.mybatisplus;
+package github.mrLawrenc.generator.mybatisplus;
 
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -8,11 +8,16 @@ import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.net.ssl.SSLException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,6 +27,8 @@ import java.util.regex.Pattern;
  * @description :    Mybatis plus 代码生成器配置
  * Mybatis plus 官网：https://mp.baomidou.com/guide/generator.html
  */
+@Slf4j
+@SuppressWarnings("all")
 public class MybatisPlusCodeConfig {
 
     private String url;
@@ -32,7 +39,9 @@ public class MybatisPlusCodeConfig {
      * 项目路径
      */
     private String projectPath = System.getProperty("user.dir");
-    //生成文件的位置，如C://test/
+    /**
+     * 生成文件的位置，如C://test/
+     */
     private String mapperLocation;
     private String serviceLocation;
     private String serviceImplLocation;
@@ -56,30 +65,49 @@ public class MybatisPlusCodeConfig {
     private boolean firstFieldIsId = true;
 
 
-    //service是否需要继承关系
+    /**
+     * service是否需要继承关系
+     */
     private boolean serviceNeedExtend = false;
-    //service接口的父类为plus的service
+    /**
+     * service接口的父类为plus的service
+     */
     private boolean serviceParentIsPlus = false;
-    //service实现类的父类为plus的service
+    /**
+     * service实现类的父类为plus的service
+     */
     private boolean serviceImplParentIsPlus = false;
 
 
-    //不需要生成controller包含基本方法
+    /**
+     * 不需要生成controller包含基本方法
+     */
     private boolean needControllerMethod = true;
-    //controller入参是否需要校验
+    /**
+     * controller入参是否需要校验
+     */
     private boolean needValid = false;
-    //设置controller生成的方法为rest风格的请求
+    /**
+     * 设置controller生成的方法为rest风格的请求
+     */
     private boolean methodRestful = false;
 
 
-    //service接口的父类为plus的service
+    /**
+     * service接口的父类为plus的service
+     */
     private String serviceParentClz = "";
-    //service实现类的父类为plus的service
+    /**
+     * service实现类的父类为plus的service
+     */
     private String serviceImplParentClz = "";
 
 
     private String entryParentClz = "";
     private String controllerParentClz = "";
+
+    private String author = "lmy";
+    private boolean needGlobalExceptionHandle = false;
 
     /**
      * 设置生成service的父类为plus的service
@@ -88,6 +116,19 @@ public class MybatisPlusCodeConfig {
         this.serviceNeedExtend = true;
         this.serviceParentIsPlus = true;
         this.serviceImplParentIsPlus = true;
+        return this;
+    }
+
+    public MybatisPlusCodeConfig setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
+    /**
+     * 需要全局异常处理
+     */
+    public MybatisPlusCodeConfig needGlobalExceptionHandle() {
+        this.needGlobalExceptionHandle = true;
         return this;
     }
 
@@ -112,44 +153,62 @@ public class MybatisPlusCodeConfig {
         return this;
     }
 
-    //entry父类设置
+    /**
+     * entity父类设置
+     */
     public MybatisPlusCodeConfig setEntryParent(String entryParentClz) {
         this.entryParentClz = entryParentClz;
         return this;
     }
 
-    //controller父类设置
+    /**
+     * controller父类设置
+     */
     public MybatisPlusCodeConfig setControllerParent(String controllerParentClz) {
         this.controllerParentClz = controllerParentClz;
         return this;
     }
 
-    //controller不需要基本方法
+    /**
+     * controller不需要基本方法
+     */
     public void setExcludeControllerMethod() {
         this.needControllerMethod = false;
     }
 
-    //设置controller入参需要校验
+    /**
+     * 设置controller入参需要校验
+     */
     public void setControllerMethodNeedValid() {
         this.needValid = true;
     }
 
-    //设置方法为restful风格请求
+    /**
+     * 设置方法为restful风格请求
+     */
     public void setMethodRestful() {
         methodRestful = true;
     }
 
-    //第一个字段(表的第一列不是主键id或者自增的)
+    /**
+     * 第一个字段(表的第一列不是主键id或者自增的)
+     */
     public void setFirstFieldNoId() {
         firstFieldIsId = false;
     }
 
-    //设置entry的生成文件夹，如;location="C://test/"
+    /**
+     * 设置entry的生成文件夹，如;location="C://test/"
+     *
+     * @param location
+     */
     public void setEntryLocation(String location) {
         entryLocation = location;
     }
 
-    //构造方法
+    /**
+     * 构造方法
+     */
     public MybatisPlusCodeConfig(String url, String driverName, String username, String password) {
         this.url = url;
         this.driverName = driverName;
@@ -158,22 +217,86 @@ public class MybatisPlusCodeConfig {
     }
 
 
+    public void replacePackage(String firstLine, String sourcePath, String newPath) throws Exception {
+
+        try (RandomAccessFile rw = new RandomAccessFile(new File(sourcePath), "rw");) {
+            int firstLineLength = rw.readLine().length();
+
+            byte[] second = new byte[1024];
+            rw.read(second, firstLineLength, (int) rw.length() - firstLineLength);
+
+            String result = firstLine + new String(second, StandardCharsets.UTF_8);
+            new FileInputStream(result).transferTo(new FileOutputStream(new File(newPath)));
+        }
+    }
+
+    /**
+     * @param tableNames  所有表名
+     * @param packageName 基础包名
+     */
+    public void doGenerator(List<String> tableNames, String packageName) {
+
+        CompletableFuture<Void> publicFuture = null;
+        if (needControllerMethod || needControllerMethod) {
+            publicFuture = CompletableFuture.runAsync(() -> {
+                //生成文件位置
+                String end = packageName.replace(".", "/");
+                //生成的java文件所在目录
+                String javaLocation = projectPath + "/src/main/java/" + end + "/";
+                String path = javaLocation + "entity";
+
+                String basePkg = packageName + ".entity;";
+                try {
+                    File temp = new File(path);
+                    if (!temp.exists()) {
+                        temp.mkdirs();
+                    }
+                    String firstLine = "package " + basePkg;
+                    if (needGlobalExceptionHandle) {
+                        String globalException = projectPath + "/src/main/java/github/mrLawrenc/generator/common/GlobalExceptionHandle.java";
+                        replacePackage(firstLine,globalException,path + "/GlobalExceptionHandle.java");
+                    }
+
+                    if (needControllerMethod) {
+                        String r = projectPath + "/src/main/java/github/mrLawrenc/generator/common/ResponseResult.java";
+                        String e = projectPath + "/src/main/java/github/mrLawrenc/generator/common/StatusEnums.java";
+
+                        replacePackage(firstLine,r,path + "/ResponseResult.java");
+                        replacePackage(firstLine,e,path + "/StatusEnums.java");
+                    }
+                } catch (Exception exception) {
+                    log.error("生成controller返回实体失败,请拷贝{}处的文件到entity包下!", exception);
+                }
+
+                log.info("生成的controller返回实体位置:{}", path);
+            });
+        }
+
+
+        CompletableFuture[] futures = tableNames.stream().map(tableName -> {
+            return CompletableFuture.runAsync(() -> codeGenerator(tableName, packageName));
+        }).toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(futures).join();
+
+        if (Objects.nonNull(publicFuture)) {
+            publicFuture.join();
+        }
+    }
+
     /**
      * 代码生成
      *
      * @param tableName   表名
      * @param packageName 基础包名
      */
-    public void codeGenerator(String tableName, String packageName) {
-        /**
-         * 生成文件位置
-         */
+    private void codeGenerator(String tableName, String packageName) {
+        //生成文件位置
         String end = packageName.replace(".", "/");
-        System.out.println(end);
         //生成的java文件所在目录
         String javaLocation = projectPath + "/src/main/java/" + end + "/";
         String xmlLocation = projectPath + "/src/main/resources/mapper/";
         String pageLocation = projectPath + "/src/main/resources/views/";
+        log.info("生成的文件位置 java:{}  xml:{}   view:{}", javaLocation, xmlLocation, pageLocation);
 
 
         // 代码生成器
@@ -181,7 +304,7 @@ public class MybatisPlusCodeConfig {
         // 全局配置
         GlobalConfig gc = new GlobalConfig();
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("lmy");
+        gc.setAuthor(author);
         gc.setFileOverride(true);
 //        gc.setEnableCache(true);
         gc.setServiceName("%sService");
@@ -205,8 +328,6 @@ public class MybatisPlusCodeConfig {
 
         // 基础包配置
         PackageConfig pc = new PackageConfig();
-/*        pc.setModuleName("test");
-        pc.setParent("com.guotie");*/
         pc.setParent(packageName);
         mpg.setPackageInfo(pc);
 
@@ -299,7 +420,13 @@ public class MybatisPlusCodeConfig {
         mpg.setStrategy(strategy);
         FreemarkerTemplateEngine freemarker = new FreemarkerTemplateEngine();
         mpg.setTemplateEngine(freemarker);
-        mpg.execute();
+        try {
+            mpg.execute();
+        } catch (Exception exception) {
+            if (!(exception instanceof SSLException)) {
+                throw exception;
+            }
+        }
     }
 
     /**

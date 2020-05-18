@@ -1,9 +1,11 @@
-package com.gtdq.generator.common.dto;
+package github.mrLawrenc.generator.common;
 
-import com.gtdq.generator.common.enums.StatusEnums;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * @author : MrLawrenc
+ */
 @Data
 @AllArgsConstructor
 public class ResponseResult {

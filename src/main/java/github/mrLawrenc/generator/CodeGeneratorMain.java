@@ -1,6 +1,6 @@
-package com.gtdq.generator;
+package github.mrLawrenc.generator;
 
-import com.gtdq.generator.mybatisplus.MybatisPlusCodeConfig;
+import github.mrLawrenc.generator.mybatisplus.MybatisPlusCodeConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ public class CodeGeneratorMain {
 
         //=================================step1:传入数据库连接信息构造对象===============================================
         //构造器参数分别为url driver username password
-        String url = "jdbc:mysql://10.1.12.209:3306/metro_base_data_dev?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC";
-        MybatisPlusCodeConfig codeConfig = new MybatisPlusCodeConfig(url, DRIVER, "metro_base_data_dev", "metroFS12#");
+        String url = "jdbc:mysql://localhost:3306/study?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC";
+        MybatisPlusCodeConfig codeConfig = new MybatisPlusCodeConfig(url, DRIVER, "root", "admin");
 
 
         //=================================step2:实体类相关设置，可以完全跳过step2===============================================
@@ -53,8 +53,10 @@ public class CodeGeneratorMain {
 
         //=================================step4:controller相关设置,可以跳过整个step4===============================================
 
-        /*//设置生成的controller里面不带基本方法
-        codeConfig.setExcludeControllerMethod();*/
+        //设置生成的controller里面不带基本方法
+        // codeConfig.setExcludeControllerMethod();
+        //设置需要全局异常捕获
+        codeConfig.setControllerMethodNeedValid();
         /*//设置方法参数需要校验不为null
         codeConfig.setControllerMethodNeedValid();*/
         /*//设置生成的方法为restful请求
@@ -63,14 +65,12 @@ public class CodeGeneratorMain {
         //=================================step5:设置需要生成的表===============================================
         List<String> tableNames = new ArrayList<>();
         for (int i = 0; i < 2; i++) {
-            tableNames.add("base_anchor_section");
-            tableNames.add("base_anchor_section_joint");
-
-
+            tableNames.add("alarm");
+            tableNames.add("user");
         }
 
 
         //=================================step6:执行===============================================
-        tableNames.forEach(tableName -> codeConfig.codeGenerator(tableName, "com"));
+        codeConfig.doGenerator(tableNames,"com.test");
     }
 }

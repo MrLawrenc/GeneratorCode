@@ -1,5 +1,7 @@
 package ${package.ServiceImpl};
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import java.util.Map;
 import java.util.List;
 import ${package.Entity}.${entity};

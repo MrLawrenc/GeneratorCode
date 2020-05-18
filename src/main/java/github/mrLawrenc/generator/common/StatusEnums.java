@@ -1,16 +1,17 @@
-package com.gtdq.generator.common.enums;
+package github.mrLawrenc.generator.common;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * @date : 2019/9/9 11:30
- * @description :   异常枚举类
+ * @author : MrLawrenc
  */
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@SuppressWarnings("all")
 public enum StatusEnums {
     SUCCESS(200, "操作成功"),
     BAD_REQUEST(400, "请求语法错误"),
@@ -21,8 +22,7 @@ public enum StatusEnums {
     SERVER_ERROR(500, "服务器异常"),
     CAPTCHA_ERROR(500, "验证码错误"),
     PASSWORD_ERROR(500, "密码错误"),
-    SERVER_UNAVAILABLE(503, "服务器异常，请稍后重试"),
-    ;
+    SERVER_UNAVAILABLE(503, "服务器异常，请稍后重试");
 
     private int code;
 
