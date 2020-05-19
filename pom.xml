@@ -19,6 +19,7 @@
     </properties>
 
     <dependencies>
+
         <!--api测试包-->
         <dependency>
             <groupId>io.springfox</groupId>

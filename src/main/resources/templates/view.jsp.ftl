@@ -2,6 +2,7 @@
 <%String path = request.getContextPath();%><!DOCTYPE html>
 <html lang="zh">
 <head>
+
     <meta charset="utf-8"/>
     <title>${table.comment!}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>

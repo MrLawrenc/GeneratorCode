@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -217,16 +216,26 @@ public class MybatisPlusCodeConfig {
     }
 
 
-    public void replacePackage(String firstLine, String sourcePath, String newPath) throws Exception {
+    public void replacePackage(String packageName, String sourcePath, String newPath) throws Exception {
 
-        try (RandomAccessFile rw = new RandomAccessFile(new File(sourcePath), "rw");) {
-            int firstLineLength = rw.readLine().length();
+        try (FileInputStream inputStream = new FileInputStream(new File(sourcePath))) {
+            File file = new File(newPath);
+            inputStream.transferTo(new FileOutputStream(file));
 
-            byte[] second = new byte[1024];
-            rw.read(second, firstLineLength, (int) rw.length() - firstLineLength);
 
-            String result = firstLine + new String(second, StandardCharsets.UTF_8);
-            new FileInputStream(result).transferTo(new FileOutputStream(new File(newPath)));
+            RandomAccessFile rw = new RandomAccessFile(file, "rw");
+
+            String s = rw.readLine();
+            if (s.length() > packageName.length()) {
+                int bound = s.length() - packageName.length();
+                for (int i = 0; i < bound; i++) {
+                    packageName += " ";
+                }
+            }
+
+            rw.seek(0);
+            rw.write(packageName.getBytes(), 0, packageName.length());
+            rw.close();
         }
     }
 
@@ -254,15 +263,15 @@ public class MybatisPlusCodeConfig {
                     String firstLine = "package " + basePkg;
                     if (needGlobalExceptionHandle) {
                         String globalException = projectPath + "/src/main/java/github/mrLawrenc/generator/common/GlobalExceptionHandle.java";
-                        replacePackage(firstLine,globalException,path + "/GlobalExceptionHandle.java");
+                        replacePackage(firstLine, globalException, path + "/GlobalExceptionHandle.java");
                     }
 
                     if (needControllerMethod) {
                         String r = projectPath + "/src/main/java/github/mrLawrenc/generator/common/ResponseResult.java";
                         String e = projectPath + "/src/main/java/github/mrLawrenc/generator/common/StatusEnums.java";
 
-                        replacePackage(firstLine,r,path + "/ResponseResult.java");
-                        replacePackage(firstLine,e,path + "/StatusEnums.java");
+                        replacePackage(firstLine, r, path + "/ResponseResult.java");
+                        replacePackage(firstLine, e, path + "/StatusEnums.java");
                     }
                 } catch (Exception exception) {
                     log.error("生成controller返回实体失败,请拷贝{}处的文件到entity包下!", exception);

@@ -62,6 +62,7 @@ public class CodeGeneratorMain {
         /*//设置生成的方法为restful请求
         codeConfig.setMethodRestful();*/
 
+
         //=================================step5:设置需要生成的表===============================================
         List<String> tableNames = new ArrayList<>();
         for (int i = 0; i < 2; i++) {

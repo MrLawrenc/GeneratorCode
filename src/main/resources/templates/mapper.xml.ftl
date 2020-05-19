@@ -17,6 +17,7 @@
 <#if !field.keyFlag><#--生成普通字段 -->
         <result column="${field.name}" property="${field.propertyName}" />
 </#if>
+
 </#list>
     </resultMap>
 

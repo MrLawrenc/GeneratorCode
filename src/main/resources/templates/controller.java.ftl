@@ -14,6 +14,7 @@ import ${package.Service}.${table.serviceName};
 <#else>
     import org.springframework.stereotype.Controller;
 </#if>
+ 
 <#if superControllerClassPackage??>
     import ${superControllerClassPackage};
 </#if>

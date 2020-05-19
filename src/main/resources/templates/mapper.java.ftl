@@ -1,5 +1,6 @@
 package ${package.Mapper};
 
+
 import java.util.List;
 import java.util.Map;
 import ${package.Entity}.${entity};

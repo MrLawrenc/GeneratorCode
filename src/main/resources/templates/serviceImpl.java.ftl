@@ -11,6 +11,7 @@ import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import ${package.Mapper}.${table.mapperName};
 import org.springframework.stereotype.Service;
+
 import org.springframework.beans.factory.annotation.Autowired;
 /**
  * ${table.comment!} Service接口实现类

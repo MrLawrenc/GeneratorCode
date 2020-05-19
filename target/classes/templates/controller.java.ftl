@@ -1,9 +1,10 @@
 package ${package.Controller};
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import java.util.Map;
 import java.util.List;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ${package.Entity}.${entity};
+import ${package.Entity}.*;
 import ${package.Service}.${table.serviceName};
 <#if cfg.needValid??>
     import org.springframework.lang.NonNull;
